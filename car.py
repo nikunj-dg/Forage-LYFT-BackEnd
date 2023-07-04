@@ -3,104 +3,81 @@ from datetime import datetime, date
 from engine import *
 from battery import *
 
-class AbstractCar(ABC):
-    def __init__(self, engine, battery):
-        self.engine = engine
-        self.battery = battery
-
+class Serviceable(ABC):
     @abstractmethod
     def needs_service(self) -> bool:
         pass
 
-class CarFactory(ABC):
+class AbstractCar(Serviceable):
     @abstractmethod
-    def create_car(self):
-        pass 
+    def __init__(self):
+        pass
 
+class CarFactory():
+    def __init__(self) -> None:
+        pass
+
+    def create_calliope(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
+        return CalliopeCar(current_date, last_service_date, current_mileage, last_service_mileage)
+
+    def create_glisade(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
+        return GlisadeCar(current_date, last_service_date, current_mileage, last_service_mileage)
+
+    def create_palindrome(self, current_date: date, last_service_date: date, warning_light_on: bool) -> AbstractCar:
+        return PalindromeCar(current_date, last_service_date, warning_light_on)
+
+    def create_rorshach(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
+        return RorshachCar(current_date, last_service_date, current_mileage, last_service_mileage)
+
+    def create_thovex(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
+        return ThovexCar(current_date, last_service_date, current_mileage, last_service_mileage)
+    
 class CalliopeCar(AbstractCar):
-    def __init__(self, engine, battery):
-        self.engine = engine # Capulet 
-        self.battery = battery # Spindler 
+    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
+        self.engine = setEngine(capuletEngine(current_mileage, last_service_mileage))
+        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
 
     def needs_service(self) -> bool:
-        pass
+        return self.engine.needs_service() or self.battery.needs_service()
 
 class GlisadeCar(AbstractCar):
-    def __init__(self, engine, battery):
-        self.engine = engine # Willoughby 
-        self.battery = battery # Spindler 
+    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
+        self.engine = setEngine(willoughbyEngine(current_mileage, last_service_mileage))
+        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
 
     def needs_service(self) -> bool:
-        pass
+        return self.engine.needs_service() or self.battery.needs_service()
 
 class PalindromeCar(AbstractCar):
-    def __init__(self, engine, battery):
-        self.engine = engine  # Sternman
-        self.battery = battery  # Spindler
+    def __init__(self, current_date: date, last_service_date: date, warning_light_on: bool):
+        self.engine = setEngine(sternmanEngine(warning_light_on))
+        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
 
     def needs_service(self) -> bool:
-        pass
+        return self.engine.needs_service() or self.battery.needs_service()
 
 class RorshachCar(AbstractCar):
-    def __init__(self, engine, battery):
-        self.engine = engine  # Willoughby 
-        self.battery = battery  # Nubin
+    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
+        self.engine = setEngine(qilloughbyEngine(current_mileage, last_service_mileage))
+        self.battery = setBattery(nubinBattery(current_date, last_service_date))
 
     def needs_service(self) -> bool:
-        pass
+        return self.engine.needs_service() or self.battery.needs_service()
 
 class ThovexCar(AbstractCar):
-    def __init__(self, engine, battery):
-        self.engine = engine  # Capulet
-        self.battery = battery  # Nubin
+    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
+        self.engine = setEngine(capuletEngine(current_mileage, last_service_mileage))
+        self.battery = setBattery(nubinBattery(current_date, last_service_date))
 
     def needs_service(self) -> bool:
-        pass
-        
-class CreateCalliope(CarFactory):
-    def create_car(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        self.current_date = current_date
-        self.last_service_date = last_service_date
-        self.current_mileage = current_mileage
-        self.last_service_mileage = last_service_mileage
+        return self.engine.needs_service() or self.battery.needs_service()
 
-        return CalliopeCar()
 
-class CreateGlisade(CarFactory):
-    def create_car(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        self.current_date = current_date
-        self.last_service_date = last_service_date
-        self.current_mileage = current_mileage
-        self.last_service_mileage = last_service_mileage
+'''
+__main__:
 
-        return CalliopeCar()
-
-class CreatePalindrome(CarFactory):
-    def create_car(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        self.current_date = current_date
-        self.last_service_date = last_service_date
-        self.current_mileage = current_mileage
-        self.last_service_mileage = last_service_mileage
-
-        return CalliopeCar()
-
-class CreateRorshach(CarFactory):
-    def create_car(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        self.current_date = current_date
-        self.last_service_date = last_service_date
-        self.current_mileage = current_mileage
-        self.last_service_mileage = last_service_mileage
-
-        return CalliopeCar()
-
-class CreateThovex(CarFactory):
-    def create_car(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        self.current_date = current_date
-        self.last_service_date = last_service_date
-        self.current_mileage = current_mileage
-        self.last_service_mileage = last_service_mileage
-
-        return CalliopeCar()
-
+car_factory = CarFactory()
+calliope = car_factory.create_calliope(...) 
+'''
 
 
