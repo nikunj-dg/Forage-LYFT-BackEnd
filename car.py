@@ -2,75 +2,68 @@ from abc import ABC, abstractmethod
 from datetime import datetime, date
 from engine import *
 from battery import *
+from tire import *
 
 class Serviceable(ABC):
     @abstractmethod
     def needs_service(self) -> bool:
         pass
 
-class AbstractCar(Serviceable):
+class Car(Serviceable):
     @abstractmethod
-    def __init__(self):
-        pass
+    def __init__(self, engine, battery, tire):
+        self.engine = engine
+        self.battery = battery
+        self.tire = tire
 
-class CarFactory():
+    def needs_service(self):
+        return self.engine.needs_service() or self.battery.needs_service() or self.tire.needs_service()
+
+class CarFactory:
     def __init__(self) -> None:
         pass
 
-    def create_calliope(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        return CalliopeCar(current_date, last_service_date, current_mileage, last_service_mileage)
+    def create_calliope(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> Car:
+        engine = capuletEngine(current_mileage, last_service_mileage)
+        battery = spindlerBattery(current_date, last_service_date)
+        tire = carriganTire([0, 0, 0, 0])
+        car = Car(engine, battery, tire)
 
-    def create_glisade(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        return GlisadeCar(current_date, last_service_date, current_mileage, last_service_mileage)
+        return car
 
-    def create_palindrome(self, current_date: date, last_service_date: date, warning_light_on: bool) -> AbstractCar:
-        return PalindromeCar(current_date, last_service_date, warning_light_on)
+    def create_glisade(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> Car:
+        engine = willoughbyEngine(current_mileage, last_service_mileage)
+        battery = spindlerBattery(current_date, last_service_date)
+        tire = octoprimeTire([0, 0, 0, 0])
+        car = Car(engine, battery, tire)
 
-    def create_rorshach(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        return RorshachCar(current_date, last_service_date, current_mileage, last_service_mileage)
+        return car
 
-    def create_thovex(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> AbstractCar:
-        return ThovexCar(current_date, last_service_date, current_mileage, last_service_mileage)
+    def create_palindrome(self, current_date: date, last_service_date: date, warning_light_on: bool) -> Car:
+        engine = sternmanEngine(warning_light_on)
+        battery = spindlerBattery(current_date, last_service_date)
+        tire = carriganTire([0, 0, 0, 0])
+        car = Car(engine, battery, tire)
+
+        return car
+
+    def create_rorshach(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> Car:
+        engine = willoughbyEngine(current_mileage, last_service_mileage)
+        battery = nubinBattery(current_date, last_service_date)
+        tire = octoprimeTire([0, 0, 0, 0])
+        car = Car(engine, battery, tire)
+
+        return car
+
+    def create_thovex(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int) -> Car:
+        engine = capuletEngine(current_mileage, last_service_mileage)
+        battery = nubinBattery(current_date, last_service_date)
+        tire = carriganTire([0, 0, 0, 0])
+        car = Car(engine, battery, tire)
+
+        return car
     
-class CalliopeCar(AbstractCar):
-    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
-        self.engine = setEngine(capuletEngine(current_mileage, last_service_mileage))
-        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
 
-    def needs_service(self) -> bool:
-        return self.engine.needs_service() or self.battery.needs_service()
-
-class GlisadeCar(AbstractCar):
-    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
-        self.engine = setEngine(willoughbyEngine(current_mileage, last_service_mileage))
-        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
-
-    def needs_service(self) -> bool:
-        return self.engine.needs_service() or self.battery.needs_service()
-
-class PalindromeCar(AbstractCar):
-    def __init__(self, current_date: date, last_service_date: date, warning_light_on: bool):
-        self.engine = setEngine(sternmanEngine(warning_light_on))
-        self.battery = setBattery(spindlerBattery(current_date, last_service_date))
-
-    def needs_service(self) -> bool:
-        return self.engine.needs_service() or self.battery.needs_service()
-
-class RorshachCar(AbstractCar):
-    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
-        self.engine = setEngine(qilloughbyEngine(current_mileage, last_service_mileage))
-        self.battery = setBattery(nubinBattery(current_date, last_service_date))
-
-    def needs_service(self) -> bool:
-        return self.engine.needs_service() or self.battery.needs_service()
-
-class ThovexCar(AbstractCar):
-    def __init__(self, current_date: date, last_service_date: date, current_mileage: int, last_service_mileage: int):
-        self.engine = setEngine(capuletEngine(current_mileage, last_service_mileage))
-        self.battery = setBattery(nubinBattery(current_date, last_service_date))
-
-    def needs_service(self) -> bool:
-        return self.engine.needs_service() or self.battery.needs_service()
 
 
 '''

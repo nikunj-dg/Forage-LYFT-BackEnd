@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod 
-from car import *
 
-class AbstractEngine(CarFactory, ABC):
+class Engine(ABC):
     @abstractmethod
     def __init__(self):
         pass
@@ -10,14 +9,7 @@ class AbstractEngine(CarFactory, ABC):
     def needs_service(self) -> bool:
         pass
 
-class setEngine():
-    def __init__(self, engine: AbstractEngine):
-        self.engine = engine
-
-    def needs_service(self) -> bool:
-        return self.engine.needs_service()
-
-class capuletEngine(AbstractEngine):
+class capuletEngine(Engine):
     def __init__(self, current_mileage, last_service_mileage):
         self.current_mileage = current_mileage
         self.last_service_mileage = last_service_mileage
@@ -25,7 +17,7 @@ class capuletEngine(AbstractEngine):
     def needs_service(self) -> bool:
         return self.current_mileage - self.last_service_mileage > 30000
 
-class willoughbyEngine(AbstractEngine):
+class willoughbyEngine(Engine):
     def __init__(self, current_mileage, last_service_mileage):
         self.current_mileage = current_mileage
         self.last_service_mileage = last_service_mileage
@@ -33,7 +25,7 @@ class willoughbyEngine(AbstractEngine):
     def needs_service(self) -> bool:
         return self.current_mileage - self.last_service_mileage > 60000
 
-class sternmanEngine(AbstractEngine):
+class sternmanEngine(Engine):
     def __init__(self, warning_light_is_on):
         self.warning_light_is_on = warning_light_is_on
 
@@ -47,7 +39,7 @@ class sternmanEngine(AbstractEngine):
 '''
 __main__:
 
-engine = setEngine(capuletEngine(...))
+engine = capuletEngine(...)
 print("Service required : " + engine.needs_service())
 '''
 
